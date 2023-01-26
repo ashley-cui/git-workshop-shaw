@@ -1,8 +1,8 @@
-# Git Workshop
+# Crash Course Git
 
 ## Intro
 ### What is git?
-Git is a command line version control tool. Essentinally, it tracks changes you make in a folder that you tell it to, and takes snapshots of those changes. Git is also particularly powerful for collaboration.
+Git is a command line version control tool. Essentially, it tracks changes you make in a folder that you tell it to, and takes snapshots of those changes. Git is also particularly powerful for collaboration.
 
 ### Install git
 #### MacOS
@@ -52,8 +52,14 @@ nothing to commit (create/copy files and use "git add" to track)
 
 Okay, looks like we're on our `main` branch, we have no commits, and there's nothing to commit. Running `git status` before doing any git operation is a good habit, as it ensures you have the right things in place.
 
-#### Make your first commit
-Okay, so let's create a file inside your repo. You can do this via your gui, your favorite text editor, or via the command line.
+
+### Commit your Changes
+#### What is a commit?
+Commits are the backbone of how git works. Essentially, a commit as a "snapshot" of every single file in your repository at the specific time you created the commit. Commits are powerful because they act like an anchor point in your project history, where you can easily look at what the code looked like at that time. You could even go back in time to that point. The best way to see this is to create a commit!
+
+#### Create your commit
+
+Okay, let's make some changes so we can create a commit. Create a file inside your repo. You can do this via your favorite text editor, or via the command line.
 
 Let's create a file named "newfile" and fill it with "some content"
 
@@ -61,12 +67,6 @@ Let's create a file named "newfile" and fill it with "some content"
 echo "some content" > newfile
 ```
 
-
-### Commit your Changes
-#### What is a commit?
-Commits are the backbone of how git works. Essentially, a commit as a "snapshot" of every single file in your repository at the specfic time you created the commit. Commits are powerful because they act like an anchor point in your project history, where you can easily look at what the code looked like at that time. You could even go back in time to that point. The best way to see this is to create a commit!
-
-#### Create your commit
 Now that you've made some changes in your repo, let's run `git status` to see what git sees.
 
 ```
@@ -124,7 +124,7 @@ Date:   Wed Jan 25 20:33:52 2023 -0500
 ```
 Using the `git log` command, we can see every commit that has been made in your repo. Git log shows you some information, including the commit hash, the author of the commit, and the commit message. The most important thing here is the commit hash, as this is globally unique to the commit. When doing other advanced git operations, you can specify the commit hash and it will guarantee that you will end up exactly here, at this commit.
 
-Let's also take a closer look at your specfic initial commit:
+Let's also take a closer look at your specific initial commit:
 
 ```
 $ git show 371fba22b9562c9888371518a95c72ecd072cbc5
@@ -153,7 +153,7 @@ a - b - c - d   "main"
        e - f    "mybranch"
 ```
 
-From the git documentation, a branch is essentally "diverging from the main line of development and continue to do work without messing with that main line." Conventionally, the "main" branch is where complete features land, so usually its best practice to implement new things on a branch, and then merge it back into the main branch after the feature is complete.
+From the git documentation, a branch essentially allows you to "diverge from the main line of development and continue to do work without messing with that main line." Conventionally, the "main" branch is where complete features land, so usually its best practice to implement new things on a branch, and then merge it back into the main branch after the feature is complete.
 
 ### Branching
 Lets make a new branch:
@@ -194,6 +194,19 @@ Date:   Wed Jan 25 20:33:52 2023 -0500
     Initial commit
 ```
 
+Just because we've made another commmit on this branch, doesn't mean that we're stuck on this new commit. Again, the power of git comes from being able to jump through history. We can view the repository at different moments in history by checking out commits, and even creating branches from old commits
+
+```
+git checkout 371fba22b9562c9888371518a95c72ecd072cbc5
+git branch oldbranch 371fba22b9562c9888371518a95c72ecd072cbc5
+```
+
+Make sure to check out your original branch once you're done looking around in a commit!
+
+```
+git checkout main
+```
+
 ### Merging
 Remember, this feature at the moment only exists on our current branch. Let's get it onto the main branch via a merge:
 
@@ -207,23 +220,24 @@ Now, the commit you created on mybranch exists on the main branch!
 Remember, everything you just did exists only on your local computer. Git becomes much more powerful when collaborating with others, and that's where remote repositories and Github comes in.
 
 ### What is a remote repository?
-Basically, a repository that lives on the internet.
+Basically, a repository that lives on the internet. Github is an example of a site that hosts remote repositories. Thus, git != github.
 
 ### Set up github
 Make a github account! https://github.com/
 
 ### Fork a repository
-## What is a fork?
+#### What is a fork?
 Github does a good job of explaining what a fork is: A fork is a copy of a repository that you manage. Forks let you make changes to a project without affecting the original repository. You can fetch updates from or submit changes to the original repository with pull requests.
 
-## Fork a repository
-Let's fork this repository! Go to https://github.com/ashley-cui/git-workshop-shaw, and in the top right corner, click the fork button. This creates a copy of this repository that's owned by you! You should see a repo on your github profile at https://github.com/your-username/git-workshop-shaw. Now, any new work that you do will be on your fork.
+#### Fork a repository
+Let's fork this repository! Go to https://github.com/ashley-cui/git-workshop-shaw, and in the top right corner, click the fork button. This creates a copy of this repository that's owned by you! You should see a repo on your github profile at https://github.com/{your-username}/git-workshop-shaw. Now, any new work that you do will be on your fork.
 
-## Clone a repository
+### Clone a repository
 In order to make changes to your fork, you need to have the repository locally. This is called cloning a repository - taking a remote repositiory and making a copy of it on your local machine.
 
 ```
-git clone https://github.com/ashley-cui/git-workshop-shaw.git
+cd ..
+git clone https://github.com/{your-username}/git-workshop-shaw.git
 cd git-workshop-shaw
 ```
 
@@ -234,11 +248,11 @@ We can take a look at what remote repositories our current local repository is a
 
 ```
 $ git remote -v
-origin	https://github.com/ashley-cui/git-workshop-shaw.git (fetch)
-origin	https://github.com/ashley-cui/git-workshop-shaw.git (push)
+origin	https://github.com/{your-username}/git-workshop-shaw.git (fetch)
+origin	https://github.com/{your-username}/git-workshop-shaw.git (push)
 ```
 
-This shows us that for `git fetch` and `git push`, if we use `origin` as an argument, git would fetch and push from https://github.com/ashley-cui/git-workshop-shaw.git.
+This shows us that for `git fetch` and `git push`, if we use `origin` as an argument, git would fetch and push from https://github.com/{your-username}/git-workshop-shaw.git.
 
 ### Pushing
 When we create a local commit and want our remote repository to also have those changes, we need to push our commit. Use what you learned in the previous section and create a branch, add a file named "your name" and commit it. After, push your commit and branch using:
@@ -290,8 +304,8 @@ Occasionally, you may edit the same file and line of code as someone else.  A me
 and when you go to pull or update your branch, git will not know how to resolve the merge, since it can't tell which version should be the latest. In this scenarion, you would have to open your text editor and manually merge the two files. Git usually will guide you through this process, so read the outputs and you'll navigate the merge conflict well. Generally speaking, you would need commit your corrected file, and run `git merge --continue`
 
 
-#### Rebasing
-Rebasing is another way to update branches who have diverged, as an alternative to merges. THe difference between merges and rebases is that merges preserves the history of both branches, while rebases rewrites history, by making it look like existing commits came after previous commits.
+### Rebasing
+Rebasing is another way to update branches who have diverged, as an alternative to merges. The difference between merges and rebases is that merges preserves the history of both branches, while rebases rewrites history, by making it look like existing commits came after previous commits.
 
 Rebases are particularly powerful, especially interactive rebases. I'd reccomend reading more into rebases, as they can solve a lot of problems, as well as create a lot of problems.
 
@@ -317,7 +331,7 @@ a - b - c - d               "main"
      \
        c - d - e - f        "mybranch"
 ```
-#### Cherry Picking
+### Cherry Picking
 Occasionally, you want one commit that exists in one branch in another branch. Git cherry pick does this. Say you have commit e on your main branch, and you want it on mybranch. To do this, you would run `git cherry-pick commit-hash-of-e` while on the main branch.
 
 Original:
@@ -334,4 +348,8 @@ a - b - c - d - e  "main"
        e - f        "mybranch"
 ```
 
+### Hard resets
+If you've messed up a branch, and want to revert it permanantly to a commit or reset the branch to another branch, you can use `git reset --hard {commithash}`. Very often, I'll use this to reset my main branch to match the upstream branch, using `git fetch upstream; git reset --hard upstream/main`. Be warned, there's no recovering from lost information from hard resets, so use them VERY carefully
 
+## More Tutorials
+The best way to learn git and get comfortable with it is to continue to use it! [Learn Git Branching](https://learngitbranching.js.org/?locale=en_US) is a super helpful website that takes you through most of the content we went through today, as well as going into more detail that I didn't have time to cover today. It's how I learned git and I can't reccomend it enough.
