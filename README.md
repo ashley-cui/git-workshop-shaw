@@ -202,3 +202,136 @@ git checkout main
 git merge mybranch
 ```
 Now, the commit you created on mybranch exists on the main branch!
+
+## Remote Git
+Remember, everything you just did exists only on your local computer. Git becomes much more powerful when collaborating with others, and that's where remote repositories and Github comes in.
+
+### What is a remote repository?
+Basically, a repository that lives on the internet.
+
+### Set up github
+Make a github account! https://github.com/
+
+### Fork a repository
+## What is a fork?
+Github does a good job of explaining what a fork is: A fork is a copy of a repository that you manage. Forks let you make changes to a project without affecting the original repository. You can fetch updates from or submit changes to the original repository with pull requests.
+
+## Fork a repository
+Let's fork this repository! Go to https://github.com/ashley-cui/git-workshop-shaw, and in the top right corner, click the fork button. This creates a copy of this repository that's owned by you! You should see a repo on your github profile at https://github.com/your-username/git-workshop-shaw. Now, any new work that you do will be on your fork.
+
+## Clone a repository
+In order to make changes to your fork, you need to have the repository locally. This is called cloning a repository - taking a remote repositiory and making a copy of it on your local machine.
+
+```
+git clone https://github.com/ashley-cui/git-workshop-shaw.git
+cd git-workshop-shaw
+```
+
+Now, you should be inside a folder called git-workshop-shaw, which is a copy of your fork.
+
+### Managing remotes
+We can take a look at what remote repositories our current local repository is associated with using the `git remote` command.
+
+```
+$ git remote -v
+origin	https://github.com/ashley-cui/git-workshop-shaw.git (fetch)
+origin	https://github.com/ashley-cui/git-workshop-shaw.git (push)
+```
+
+This shows us that for `git fetch` and `git push`, if we use `origin` as an argument, git would fetch and push from https://github.com/ashley-cui/git-workshop-shaw.git.
+
+### Pushing
+When we create a local commit and want our remote repository to also have those changes, we need to push our commit. Use what you learned in the previous section and create a branch, add a file named "your name" and commit it. After, push your commit and branch using:
+
+```
+git push -u origin my-branch-name
+```
+
+The -u option tells git to create a new branch named my-branch-name on your origin remote repository. On subsequent pushes, you do not need to specify this, a generic `git push` would suffice.
+
+Now, if you look at your fork on github, you should see a branch named my-branch-name. You should also see a notification that asks you if you want to create a pull request.
+
+
+### Upstream and Pull Requests
+#### Contributing upstream
+Remember that you forked a repository, and remember that the commit you just pushed? Let's get that commit into the original repository, at https://github.com/ashley-cui/git-workshop-shaw! In order to do so, you need to create a pull request, since you do not have permissions to directly pull from the upstream repository. Use the GUI to open a pull request, and I'll merge them into the repository.
+
+#### Keeping your branch up to date
+Okay, now that a bunch of pull requests have been merged, you might want the most recent version of the repository, where everyone's name is in your local repository, as well as in your fork. In order to do this, we need to tell git to track the original repo. We can add this using `git remote add`.
+
+```
+git remote add upstream https://github.com/ashley-cui/git-workshop-shaw.git
+```
+
+This tells git that when you use the `upstream` argument on pushes and pulls, to push and pull from. Now, lets update your main branch.
+
+```
+git checkout main
+git fetch upstream
+git merge upstream/main
+```
+
+We switch to the main branch in order to update it. The `git fetch` operation tells git to go to download all the changes that happened upstream. This doesn't change anything on your actual local branches until you run `git merge`. These two commands are often used together In fact, `git fetch` and `git merge` used together is equivilent to `git pull`.
+
+Run `git log` to see each other's commits!
+
+Now, your local branch matches the upstream repository. However, your remote origin branch doesn't have the updates. You need to push these changes that you have locally to your origin branch.
+
+```
+git push
+```
+
+Now, check your remote origin branch, and it should have all the commits that exist upstream as well!
+
+## More Advanced topics
+### Merge conflicts
+Occasionally, you may edit the same file and line of code as someone else.  A merge conflict is an event that takes place when Git is unable to automatically resolve differences in code between two commits. Git can merge the changes automatically only if the commits are on different lines or branches.
+
+and when you go to pull or update your branch, git will not know how to resolve the merge, since it can't tell which version should be the latest. In this scenarion, you would have to open your text editor and manually merge the two files. Git usually will guide you through this process, so read the outputs and you'll navigate the merge conflict well. Generally speaking, you would need commit your corrected file, and run `git merge --continue`
+
+
+#### Rebasing
+Rebasing is another way to update branches who have diverged, as an alternative to merges. THe difference between merges and rebases is that merges preserves the history of both branches, while rebases rewrites history, by making it look like existing commits came after previous commits.
+
+Rebases are particularly powerful, especially interactive rebases. I'd reccomend reading more into rebases, as they can solve a lot of problems, as well as create a lot of problems.
+
+Original:
+
+```
+a - b - c - d   "main"
+     \
+       e - f        "mybranch"
+```
+
+Merge creates a merge commit "e"
+```
+a - b - c - d - g   "main"
+     \        /
+       e - f        "mybranch"
+```
+
+
+Rebase makes it look like that e always came after "e"
+```
+a - b - c - d               "main"
+     \
+       c - d - e - f        "mybranch"
+```
+#### Cherry Picking
+Occasionally, you want one commit that exists in one branch in another branch. Git cherry pick does this. Say you have commit e on your main branch, and you want it on mybranch. To do this, you would run `git cherry-pick commit-hash-of-e` while on the main branch.
+
+Original:
+```
+a - b - c - d   "main"
+     \
+       e - f        "mybranch"
+```
+
+Cherry picked e onto main branch
+```
+a - b - c - d - e  "main"
+     \
+       e - f        "mybranch"
+```
+
+
